@@ -1,0 +1,23 @@
+{
+    "name": "vlsoprun/laravel-vk-market",
+    "version": "1.0.0",
+    "license": "MIT",
+    "homepage": "https://github.com/vlsoprun/laravel-imgix",
+    "authors": [
+        {
+            "name": "vlsoprun",
+            "email": "vlsoprun@yandex.ru"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "illuminate/support": "^5.3",
+        "illuminate/http": "^5.3",
+        "guzzlehttp/guzzle": "^6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vlsoprun\\VkMarket\\": "src/"
+        }
+    }
+}
