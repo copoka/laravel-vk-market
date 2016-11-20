@@ -16,6 +16,8 @@ class Builder
 
     const API_VERSION = '5.60';
 
+    public $client;
+
     protected $access_token;
     protected $config = [];
 
