@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Vlsoprun\VkMarket;
 
+use Vlsoprun\VkMarket\Exceptions\BuilderException;
+
 class Market
 {
     protected $group_id;
@@ -12,6 +14,10 @@ class Market
     public function __construct(Builder $builder)
     {
         $this->builder = $builder;
+
+        if (!$builder->isAuth()) {
+            throw new BuilderException('You must obtain a access_token');
+        }
     }
 
     public function setGroup(int $group_id)
@@ -47,14 +53,27 @@ class Market
         return $response['response'];
     }
 
+    public function add(array $params)
+    {
+        $params = array_merge($params, [
+            'owner_id' => '-' . $this->group_id,
+        ]);
+
+        return $this->builder->getMethod('market.add', $params);
+    }
+
     public function uploadFile(string $file, bool $main_photo = false)
     {
+        if (!is_file($file)) {
+            throw new BuilderException("File {$file} does not exist");
+        }
+
         $uploadServer = $this->builder->getMethod('photos.getMarketUploadServer', [
             'group_id'   => $this->group_id,
             'main_photo' => $main_photo ? 1 : 0,
         ]);
 
-        $request = $this->builder->client->request('POST', $uploadServer['upload_url'], [
+        $request = $this->builder->client->request('POST', $uploadServer['response']['upload_url'], [
             'multipart' => [
                 [
                     'name'     => 'file',
@@ -64,10 +83,10 @@ class Market
         ]);
 
         $response = json_decode($request->getBody()->getContents(), true);
-        $response['group_id'] = '30426745';
+        $response['group_id'] = $this->group_id;
 
         $response = $this->builder->getMethod('photos.saveMarketPhoto', $response);
 
-        return $response['response'][0];
+        return $response['response']['0'];
     }
 }
