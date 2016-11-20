@@ -16,31 +16,18 @@ class Builder
 
     const API_VERSION = '5.60';
 
-    private $access_token;
-    private $expires_in;
-    private $user_id;
-
-    private $config = [];
-    // private $app_id;
-    // private $api_secret;
-
+    protected $access_token;
+    protected $config = [];
 
     public function __construct(Application $application)
     {
         $this->config = $application->make('config')->get('vk-market');
-        // $this->app_id = $this->config['app_id'];
-        // $this->api_secret = $this->config['api_secret'];
         $this->client = new Client();
     }
 
     public function isAuth(): bool
     {
         return $this->access_token !== null;
-    }
-
-    public function authorize(Request $request)
-    {
-        // $request->has('code')
     }
 
     public function getAuthorizeUrl(): string
@@ -71,8 +58,6 @@ class Builder
         $response = json_decode($response, true);
 
         $this->access_token = $response['access_token'];
-        $this->expires_in = $response['expires_in'];
-        $this->user_id = $response['user_id'];
 
         return $response;
     }
@@ -80,20 +65,6 @@ class Builder
     public function setAccessToken(string $access_token)
     {
         $this->access_token = $access_token;
-    }
-
-    public function marketGet(int $count = 100, int $offset = 0, int $album_id = 0)
-    {
-        $response = $this->getMethod('market.get', [
-            'owner_id' => '-30426745',
-            'count'    => $count,
-            'offset'   => $offset,
-            'album_id' => $album_id,
-        ]);
-
-        unset($response['response'][0]);
-
-        return $response['response'];
     }
 
     public function getMethod(string $method, array $params): array
@@ -108,17 +79,5 @@ class Builder
         $content = $response->getBody()->getContents();
 
         return json_decode($content, true);
-    }
-
-    public function marketGetCategories(int $count = 100, int $offset = 0)
-    {
-        $response = $this->getMethod('market.getCategories', [
-            'count'  => $count,
-            'offset' => $offset,
-        ]);
-
-        unset($response['response'][0]);
-
-        return $response['response'];
     }
 }
