@@ -53,9 +53,9 @@ class Market
         return $response['response'];
     }
 
-    public function add(array $params)
+    public function add(Product $product)
     {
-        $params = array_merge($params, [
+        $params = array_merge($product->getParams(), [
             'owner_id' => '-' . $this->group_id,
         ]);
 

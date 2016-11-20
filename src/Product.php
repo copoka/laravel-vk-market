@@ -76,15 +76,15 @@ class Product
         $this->photo_ids = implode(',', $photo_ids);
     }
 
-    public function create()
+    public function getParams()
     {
-        return $this->market->add([
+        return [
             'name'          => $this->name,
             'description'   => $this->description,
             'category_id'   => $this->category_id,
             'price'         => $this->price,
             'main_photo_id' => $this->main_photo_id,
             'photo_ids'     => $this->photo_ids,
-        ]);
+        ];
     }
 }
